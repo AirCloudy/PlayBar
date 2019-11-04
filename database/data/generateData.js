@@ -28,10 +28,9 @@ const writeHeaders = (filename) => {
     'artist',
     'album',
     'thumbnailURL',
-    '\n\r',
   ];
-  const likeHeaders = ['songId', 'userName', '\n\r'];
-  const playHistoryHeaders = ['songId', 'userName', '\n\r'];
+  const likeHeaders = ['songId', 'userName'];
+  const playHistoryHeaders = ['songId', 'userName\r'];
 
   if (filename === 'songs') {
     fs.writeFileSync(songsCSV, songsHeaders, (err) => {
@@ -62,6 +61,9 @@ const writeHeaders = (filename) => {
   }
 };
 
+// get a list of 1000 users
+const users = generateUserList();
+
 const generateSaveSongs = () => {
   writeHeaders('songs');
   // GENERATE AND SAVE SONG EXAMPLES
@@ -77,13 +79,14 @@ const generateSaveSongs = () => {
     // Create song; songId = i
     const song = [
       i, // song id
+      '-1', // likeid
+      faker.random.word(), // album
+      userName, // artist
       faker.random.number(), // like count
+      'likeUserName_example', // likeusername
       faker.image.imageUrl(), // song data URL
       faker.random.words(), // song name
-      userName, // artist
-      faker.random.word(), // album
-      faker.image.imageUrl(), // thumbnail url
-      '\r',
+      `${faker.image.imageUrl()}\n`, // thumbnail url
     ];
     // write song array to file
     fs.appendFileSync(songsCSV, song, (err) => {
@@ -125,11 +128,11 @@ const generateSaveLikes = () => {
 const generateSavePlayHistory = () => {
   writeHeaders('playHistory');
   // GENERATE AND SAVE PLAY HISTORY EXAMPLES
-  for (let i = 0; i < 10000; i += 1) {
+  for (let i = 0; i < 100; i += 1) {
     // get a song id
     const songId = faker.random.number({
-      min: 0,
-      max: 9999999,
+      min: 1,
+      max: 10000000,
     });
     // get a username
     const userName =
@@ -140,7 +143,7 @@ const generateSavePlayHistory = () => {
         })
       ];
     // Create history entry
-    const historyEntry = [songId, userName, '\r'];
+    const historyEntry = [songId, `${userName}\n`];
     // write history array to file
     fs.appendFileSync(playHistoryCSV, historyEntry, (err) => {
       if (err) {
@@ -150,13 +153,10 @@ const generateSavePlayHistory = () => {
   }
 };
 
-// get a list of 1000 users
-const users = generateUserList();
-
 const start = Date.now();
 // generateSaveSongs();
 // generateSaveLikes();
-// generateSavePlayHistory();
+generateSavePlayHistory();
 const end = Date.now();
 
 console.log('total time:', end - start);

@@ -16,6 +16,4 @@ coverage/clover.xml
 
 coverage/lcov-report/index.html
 
-database/data/songs.csv
-database/data/playHistory.csv
-database/data/likes.csv
+database/data/*.csv

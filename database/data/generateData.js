@@ -2,8 +2,11 @@ const faker = require('faker');
 const fs = require('fs');
 
 // Save data as both csv and json
+// const songsCSV =
+//   '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/songs.csv';
+
 const songsCSV =
-  '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/songs.csv';
+  '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/songsSMALL.csv';
 const likesCSV =
   '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/likes.csv';
 const playHistoryCSV =
@@ -27,7 +30,7 @@ const writeHeaders = (filename) => {
     'songName',
     'artist',
     'album',
-    'thumbnailURL',
+    'thumbnailURL"\r"',
   ];
   const likeHeaders = ['songId', 'userName'];
   const playHistoryHeaders = ['songId', 'userName\r'];
@@ -67,7 +70,7 @@ const users = generateUserList();
 const generateSaveSongs = () => {
   writeHeaders('songs');
   // GENERATE AND SAVE SONG EXAMPLES
-  for (let i = 1; i <= 10000000; i += 1) {
+  for (let i = 1; i <= 100; i += 1) {
     // get a username
     const userName =
       users[
@@ -128,7 +131,7 @@ const generateSaveLikes = () => {
 const generateSavePlayHistory = () => {
   writeHeaders('playHistory');
   // GENERATE AND SAVE PLAY HISTORY EXAMPLES
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; i < 25000; i += 1) {
     // get a song id
     const songId = faker.random.number({
       min: 1,
@@ -154,9 +157,9 @@ const generateSavePlayHistory = () => {
 };
 
 const start = Date.now();
-// generateSaveSongs();
+generateSaveSongs();
 // generateSaveLikes();
-generateSavePlayHistory();
+// generateSavePlayHistory();
 const end = Date.now();
 
 console.log('total time:', end - start);

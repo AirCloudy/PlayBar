@@ -8,12 +8,12 @@ CREATE TABLE songs
 (
   songId integer PRIMARY KEY,
   likeId integer,
-  album VARCHAR (50),
-  artist VARCHAR (50),
+  album VARCHAR (60),
+  artist VARCHAR (60),
   likeCount integer DEFAULT 0,
-  likeUserName VARCHAR(50),
+  likeUserName VARCHAR(60),
   songDataURL VARCHAR (150),
-  songName VARCHAR (50),
+  songName VARCHAR (60),
   thumbnailURL VARCHAR (150)
 );
 

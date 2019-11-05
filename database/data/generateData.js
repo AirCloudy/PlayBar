@@ -25,12 +25,14 @@ const writeHeaders = (filename) => {
   // WRITE HEADERS
   const songsHeaders = [
     'songId',
+    'likeId',
+    'album',
+    'artist',
     'likeCount',
+    'likeUserName',
     'songDataURL',
     'songName',
-    'artist',
-    'album',
-    'thumbnailURL"\r"',
+    'thumbnailURL\n',
   ];
   const likeHeaders = ['songId', 'userName'];
   const playHistoryHeaders = ['songId', 'userName\r'];
@@ -88,7 +90,7 @@ const generateSaveSongs = () => {
       faker.random.number(), // like count
       'likeUserName_example', // likeusername
       faker.image.imageUrl(), // song data URL
-      faker.random.words(), // song name
+      faker.random.word().slice(), // song name
       `${faker.image.imageUrl()}\n`, // thumbnail url
     ];
     // write song array to file

@@ -21,18 +21,14 @@ CREATE TABLE likes
 (
   id serial PRIMARY KEY,
   songId integer,
-  userName VARCHAR(50),
-  FOREIGN KEY (songId)
-    REFERENCES songs(songId)
+  userName VARCHAR(50)
 );
 
 CREATE TABLE playHistory 
 (
   id serial,
   songId integer,
-  userName VARCHAR(50),
-  FOREIGN KEY (songId)
-    REFERENCES songs(songId)
+  userName VARCHAR(50)
 );
 
 -- INSERT INTO songs (

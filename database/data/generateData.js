@@ -7,8 +7,10 @@ const fs = require('fs');
 
 const songsCSV =
   '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/songsSMALL.csv';
-const likesCSV =
-  '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/likes.csv';
+const likesCSVCassandra =
+  '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/likesCASSANDRA.csv';
+const likesCSVPostgres =
+  '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/likesPOSTGRESBAR.csv';
 const playHistoryCSV =
   '/Users/jonathanolson/HackReactor/SDC/playbar/database/data/playHistory.csv';
 
@@ -34,8 +36,9 @@ const writeHeaders = (filename) => {
     'songName',
     'thumbnailURL\n',
   ];
-  const likeHeaders = ['songId', 'userName'];
-  const playHistoryHeaders = ['songId', 'userName\r'];
+  const likeHeadersPostgres = `songId|userName\n`;
+  const likeHeadersCassandra = ['songId', 'likeId', 'likeUserName\n'];
+  const playHistoryHeaders = ['songId', 'userName\n'];
 
   if (filename === 'songs') {
     fs.writeFileSync(songsCSV, songsHeaders, (err) => {
@@ -46,12 +49,21 @@ const writeHeaders = (filename) => {
       }
     });
   }
-  if (filename === 'likes') {
-    fs.writeFileSync(likesCSV, likeHeaders, (err) => {
+  if (filename === 'likesCASSANDRA') {
+    fs.writeFileSync(likesCSVCassandra, likeHeadersCassandra, (err) => {
       if (err) {
         console.log(err);
       } else {
-        console.log('like headers written successfully!!');
+        console.log('like cassandra headers written successfully!!');
+      }
+    });
+  }
+  if (filename === 'likesPOSTGRES') {
+    fs.writeFileSync(likesCSVPostgres, likeHeadersPostgres, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('like postgres headers written successfully!!');
       }
     });
   }
@@ -82,17 +94,17 @@ const generateSaveSongs = () => {
         })
       ];
     // Create song; songId = i
-    const song = [
-      i, // song id
-      '-1', // likeid
-      faker.random.word(), // album
-      userName, // artist
-      faker.random.number(), // like count
-      'likeUserName_example', // likeusername
-      faker.image.imageUrl(), // song data URL
-      faker.random.word().slice(), // song name
-      `${faker.image.imageUrl()}\n`, // thumbnail url
-    ];
+    const song = 
+     // song id
+      // likeid
+      // album
+      // artist
+      // like count
+      // likeusername
+      // song data URL
+      // song name
+      // thumbnail url
+      `${i}|'${-1}'|${faker.random.word()}|${userName}|${faker.random.number()}|${'likeUserName_example'}|${faker.image.imageUrl()}|${faker.random.word().slice()}|${faker.image.imageUrl()}\n`;
     // write song array to file
     fs.appendFileSync(songsCSV, song, (err) => {
       if (err) {
@@ -102,17 +114,17 @@ const generateSaveSongs = () => {
   }
 };
 
-const generateSaveLikes = () => {
-  writeHeaders('likes');
+const generateSavelikesCASSANDRA = () => {
+  writeHeaders('likesCASSANDRA');
   // GENERATE AND SAVE LIKE EXAMPLES
-  for (let i = 0; i < 50000000; i += 1) {
+  for (let i = 0; i < 100; i += 1) {
     // get a song id < 10,000,000
     const songId = faker.random.number({
       min: 0,
       max: 9999999,
     });
     // get a username
-    const userName =
+    const likeUserName =
       users[
         faker.random.number({
           min: 0,
@@ -120,9 +132,37 @@ const generateSaveLikes = () => {
         })
       ];
     // Create like entry
-    const likeEntry = [songId, userName, '\r'];
+    const likeEntry = `${songId}|${i}|${likeUserName}\n`;
     // write like array to file
-    fs.appendFileSync(likesCSV, likeEntry, (err) => {
+    fs.appendFileSync(likesCSVCassandra, likeEntry, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+};
+
+const generateSavelikesPOSTGRES = () => {
+  writeHeaders('likesPOSTGRES');
+  // GENERATE AND SAVE LIKE EXAMPLES
+  for (let i = 0; i < 100; i += 1) {
+    // get a song id < 10,000,000
+    const songId = faker.random.number({
+      min: 0,
+      max: 9999999,
+    });
+    // get a username
+    const likeUserName =
+      users[
+        faker.random.number({
+          min: 0,
+          max: 999,
+        })
+      ];
+    // Create like entry
+    const likeEntry = `${songId}|${likeUserName}\n`;
+    // write like array to file
+    fs.appendFileSync(likesCSVPostgres, likeEntry, (err) => {
       if (err) {
         console.log(err);
       }
@@ -148,7 +188,7 @@ const generateSavePlayHistory = () => {
         })
       ];
     // Create history entry
-    const historyEntry = [songId, `${userName}\n`];
+    const historyEntry = `${songId}|${userName}\n`;
     // write history array to file
     fs.appendFileSync(playHistoryCSV, historyEntry, (err) => {
       if (err) {
@@ -159,8 +199,9 @@ const generateSavePlayHistory = () => {
 };
 
 const start = Date.now();
-generateSaveSongs();
-// generateSaveLikes();
+// generateSaveSongs();
+// generateSavelikesCASSANDRA();
+generateSavelikesPOSTGRES();
 // generateSavePlayHistory();
 const end = Date.now();
 

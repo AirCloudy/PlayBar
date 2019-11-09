@@ -1,19 +1,23 @@
-const cassandra = require('cassandra-driver');
+const cassandra = require("cassandra-driver");
 
 const client = new cassandra.Client({
-    contactPoints: ['localhost'],
-    localDataCenter: 'datacenter1',
-    keyspace: 'mykeyspace',
-  });
+  contactPoints: ["localhost"],
+  localDataCenter: "datacenter1",
+  keyspace: "mykeyspace"
+});
 
 // manually connect to make sure there are no connection errors
-client.connect()
-  .then(() => {
-    console.log('Cassandra client connected!')
-  })
+client.connect().then(() => {
+  console.log(
+    `Cassandra client connected! Current Time: ${new Date(
+      Date.now()
+    ).toLocaleString()}`
+  );
+});
 
+// SELECT a song from Cassandra by song ID
 const getSong = (songId, userName, res) => {
-    // create generic query
+  // create generic query
   const query = `
     SELECT 
       songName, album, artist, likeCount, songDataURL, thumbNailURL, likeUserName 
@@ -22,52 +26,39 @@ const getSong = (songId, userName, res) => {
     WHERE 
       songId = ${songId} AND likeId = -1;
   `;
+  client.execute(query).then(response => {
+    res.send(response);
+  });
   // execute query
-  client.execute(query)
-  .then((result) => {
-    res.end(JSON.stringify(result.rows[0]))
-  })
-}
+  // executeQuery(query, res, values);
+};
 
+// INSERT a song to Cassandra given a song object
 const addSong = (songObj, res) => {
-   const {songId,
-   album,
-   artist,
-   likeCount,
-   likeUserName,
-   songDataURL,
-   songName,
-   thumbnailURL} = songObj;
+  const {
+    songId,
+    album,
+    artist,
+    likeCount,
+    songDataURL,
+    songName,
+    thumbnailURL
+  } = songObj;
 
-   const query = `
-    INSERT INTO songs (
-      songId, 
-      likeCount, 
-      songDataURL, 
-      songName, 
-      artist, 
-      album, 
-      thumbnailURL, 
-      likeId, 
-      likeusername) 
-    VALUES (
-      ${songId},
-      ${likeCount},
-      ${songDataURL},
-      ${songName},
-      ${artist},
-      ${album},
-      ${thumbnailURL},
-      -1,
-      ${likeUserName});
-   `;
+  client
+    .execute(
+      `INSERT INTO songs (songId, likeCount, songDataURL, songName, artist, album, thumbnailURL, likeId) VALUES (${songId}, ${likeCount}, '${songDataURL}', '${songName}', '${artist}', '${album}', '${thumbnailURL}', -1);`
+    )
+    .then(() => {
+      res.send("success");
+    })
+    .catch(err => {
+      res.send(err);
+    });
 
   // execute query
-  client.execute(query)
-  .then((result) => {
-    res.end(JSON.stringify(result))
-  })
-}
+  // executeQuery(query, res);
+};
 
 module.exports.getSong = getSong;
 module.exports.addSong = addSong;

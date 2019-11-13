@@ -17,6 +17,8 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, "../public")));
 
+app.use(express.static("loaderio"));
+
 app.use(jsonParser);
 
 // GET SONG

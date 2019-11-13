@@ -8,7 +8,11 @@
     "db": "mysql -u root -p < ./database/data/schema.sql",
     "build": "webpack",
     "start": "nodemon ./server/index.js localhost 3000",
-    "seed-database": "node database/seed.js"
+    "seed-database": "node database/seed.js",
+    "stress-get": "k6 run stressTesting/k6_get.js",
+    "stress-post": "k6 run stressTesting/k6_post.js",
+    "stress-get-proxy": "k6 run stressTesting/k6_get_proxy.js",
+    "stress-post-proxy": "k6 run stressTesting/k6_post_proxy.js"
   },
   "repository": {
     "type": "git",
@@ -55,6 +59,7 @@
     "faker": "^4.1.0",
     "fast-csv": "^3.4.0",
     "mysql": "^2.17.1",
+    "newrelic": "^6.1.0",
     "nodemon": "^1.19.3",
     "path": "^0.12.7",
     "prop-types": "^15.7.2",

@@ -26,9 +26,15 @@ const getSong = (songId, userName, res) => {
     WHERE 
       songId = ${songId} AND likeId = -1;
   `;
-  client.execute(query).then(response => {
-    res.send(response);
-  });
+  client
+    .execute(query)
+    .then(response => {
+      res.send(response);
+    })
+    .catch(err => {
+      res.writeHead(500);
+      res.end(JSON.stringify(err));
+    });
   // execute query
   // executeQuery(query, res, values);
 };
@@ -50,10 +56,12 @@ const addSong = (songObj, res) => {
       `INSERT INTO songs (songId, likeCount, songDataURL, songName, artist, album, thumbnailURL, likeId) VALUES (${songId}, ${likeCount}, '${songDataURL}', '${songName}', '${artist}', '${album}', '${thumbnailURL}', -1);`
     )
     .then(() => {
-      res.send("success");
+      res.writeHead(200);
+      res.end("success");
     })
     .catch(err => {
-      res.send(err);
+      res.writeHead(500);
+      res.end(err);
     });
 
   // execute query

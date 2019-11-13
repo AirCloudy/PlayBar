@@ -17,3 +17,6 @@ coverage/clover.xml
 coverage/lcov-report/index.html
 
 database/data/*.csv
+
+newrelic.js
+newrelic_agent.log

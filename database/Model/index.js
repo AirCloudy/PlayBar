@@ -10,8 +10,7 @@ const client = new cassandra.Client({
     "172.31.15.230",
     "172.31.12.245",
     "172.31.14.229",
-    "172.31.6.214",
-    "172.31.11.68"
+    "172.31.6.214"
   ],
   localDataCenter: "datacenter1",
   keyspace: "mykeyspace",

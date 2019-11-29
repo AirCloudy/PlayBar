@@ -1,6 +1,12 @@
 # AirCloudy Play Bar Module
 
-A fixed-position song playback center.
+A backend microservice for a fixed-position song playback center, focusing mostly on user interaction via 'like'/'dislike' song status. 
+
+This service was scaled as a proof-of-concept in horizontal scaling, employing a 10-node Apache Cassandra cluster, four Express server instances, and an NGING reverse-proxy/load balancer, all hosted on AWS T2 micro/small services. This scaling (from original 1-node Cassandra, 1 Express server, NGINX reverse-proxy) resulted in an increase from an original ~290 requests per second to ~2100 requests per second with a 0% error rate and a maximum request latency of 140ms.
+
+## Future Considerations
+
+Further improvements could easily by made via vertical scaling (as incredibly underpowered AWS T2 micro and small instances were used), where Cassnadra documentation recommends many more cores of a more powerful CPU with increased RAM for caching. This would easily increase the throughput RPS, which would cause increased stress on already-highly-stressed Express server CPUs, but this should be largely, if not completely, mitigated by commensurate vertical scaling of Express servers.
 
 ## Server Routes
 
